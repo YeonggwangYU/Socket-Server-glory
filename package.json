@@ -1,0 +1,24 @@
+{
+  "name": "socket-server-glory",
+  "version": "1.0.0",
+  "description": "yooglory server",
+  "main": "app.js",
+  "scripts": {
+    "test": "testet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YeonggwangYU/socket-server-glory.git"
+  },
+  "author": "yooglory",
+  "license": "ISC",
+  "dependencies": {
+    "express": "3.4.8",
+    "socket.io": "1.3.5"
+  },
+  "bugs": {
+    "url": "https://github.com/YeonggwangYU/socket-server-glory/issues"
+  },
+  "homepage": "https://github.com/YeonggwangYU/socket-server-glory#readme",
+  "devDependencies": {}
+}
