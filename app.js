@@ -14,22 +14,23 @@ app.all('/', function (req, res, next){
 
 var port = process.env.PORT || 1337;
 var server = http.createServer(app).listen(port, function () {
-    console.log('1337');
+    console.log('createServer_1337');
 })
 
 var io = socketio.listen(server);
 io.sockets.on('connection', function (socket){
-    socket.on('join', function (result) {
-        console.log('join: ' + socket.room);
+    socket.on('join', function (data) {
+        console.log(data.user + ' : ' + data.roomname);
+
         socket.leave(socket.room);
-        socket.join(result);
-        socket.room = result;
-        io.sockets.in(socket.room).emit('join', result);
+        socket.join(data.roomname);
+        socket.room = data.roomname;
+        io.sockets.in(socket.room).emit('join', data);
     });
 
-    socket.on('message', function (result) {
-        console.log(result.inpUserName + ' : ' + result.inpUserMessage + ' : ' + result.date);
-        io.sockets.in(socket.room).emit('message', result);
+    socket.on('msg', function (data) {
+        console.log(data.user + ' : ' + data.msg + ' : ' + data.date);
+        io.sockets.in(socket.room).emit('msg', data);
     });
 
     socket.on('disconnect', function () {
