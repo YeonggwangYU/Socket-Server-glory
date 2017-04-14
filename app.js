@@ -17,8 +17,6 @@ var server = http.createServer(app).listen(port, function () {
     console.log('1337');
 })
 
-
-
 var io = socketio.listen(server);
 io.sockets.on('connection', function (socket){
     socket.on('join', function (result) {
@@ -26,7 +24,7 @@ io.sockets.on('connection', function (socket){
         socket.leave(socket.room);
         socket.join(result);
         socket.room = result;
-        //io.sockets.in(socket.room).emit('join', data);
+        io.sockets.in(socket.room).emit('join', result);
     });
 
     socket.on('message', function (result) {
