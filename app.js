@@ -12,9 +12,12 @@ app.all('/', function (req, res, next){
     });
 });
 
-var server = http.createServer(app).listen(8212, function (){
-    console.log('8212');
+var port = process.env.PORT || 1337;
+var server = http.createServer(app).listen(port, function () {
+    console.log('1337');
 })
+
+
 
 var io = socketio.listen(server);
 io.sockets.on('connection', function (socket){
