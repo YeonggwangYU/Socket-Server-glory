@@ -11,8 +11,8 @@ app.all('/', function (req, res, next){
     });
 });
 
-//var port = process.env.PORT || 1337;
-var server = http.createServer(app).listen(8212, function () {
+var port = process.env.PORT || 1337;
+var server = http.createServer(app).listen(port, function () {
     console.log('createServer_8212');
 })
 
