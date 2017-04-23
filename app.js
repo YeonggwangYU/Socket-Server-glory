@@ -11,23 +11,23 @@ app.all('/', function (req, res, next){
     });
 });
 
-var port = process.env.PORT || 1337;
-var server = http.createServer(app).listen(port, function () {
+//var port = process.env.PORT || 1337;
+var server = http.createServer(app).listen(8212, function () {
     console.log('createServer_8212');
 })
 
 var UserRooms = [];
 var io = socketio.listen(server);
 io.sockets.on('connection', function (socket) {
+    var ID;
+    var MatchID;
+    var RoomID;
+
     function UserRoom(ID, MatchID, Lock){
         this.ID = ID;
         this.MatchID = MatchID;
         this.Lock = Lock;
     }
-
-    var ID;
-    var MatchID;
-    var RoomID;
 
     function GenerateRandom(min, max){
     	var ranNum = Math.floor(Math.random()*(max-min+1))+min;
@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
 
                 //io.sockets.in(data.ID).emit('MatchStop', data);
                 io.to(socket.id).emit('MatchStop', data);
-                console.log('Leave : Match, Join : ' + data.ID);
+                console.log('Join Room ID : ' + data.ID);
                 console.log('Match Success!');
             }
         }
@@ -69,7 +69,7 @@ io.sockets.on('connection', function (socket) {
 		    	        socket.join(UserRooms[item2].MatchID);
 		    	        RoomID = UserRooms[item2].MatchID;
 
-		    	        console.log('Leave : Match, Join : ' + UserRooms[item2].MatchID);
+		    	        console.log('Host Creater : ' + data.ID + ' Room : ' + UserRooms[item2].MatchID);
 		    	        //io.sockets.in(UserRooms[item2].MatchID).emit('MatchStart', data);
 		    	        io.to(socket.id).emit('MatchStart', data);
 		    	        console.log('Match Start! Room Name : ' + UserRooms[item2].MatchID);    
@@ -95,14 +95,25 @@ io.sockets.on('connection', function (socket) {
         io.sockets.in(RoomID).emit('msg', data);
     });
 
+    socket.on('SendRand', function (data) {
+        console.log('GetRand');
+        io.sockets.in(RoomID).emit('SendRand', data);
+    });
+
     socket.on('CharSel', function (data) {
         console.log('nCharSel ' + data.nCharSel);
         socket.broadcast.to(RoomID).emit('CharSel', data);
     });
 
-    socket.on('Connect', function (data) {
-        socket.broadcast.to(RoomID).emit('Connect', data);
-        console.log('Connect :' + ID);
+    socket.on('MyConnect', function (data) {
+        io.to(socket.id).emit('MyConnect', data);
+        console.log('MyConnect :' + data.ID);
+    });
+
+    socket.on('EnemyConnect', function (data) {
+
+        socket.broadcast.to(RoomID).emit('EnemyConnect', data);
+        console.log('EnemyConnect :' + data.ID);
     });
 
     socket.on('CardList', function (data) {
@@ -113,6 +124,11 @@ io.sockets.on('connection', function (socket) {
     socket.on('ActionColorMap', function (data) {
         socket.broadcast.to(RoomID).emit('ActionColorMap', data);
         console.log('Send ActionColorMap');
+    });
+
+    socket.on('ColorAddMap', function (data) {
+        io.sockets.in(RoomID).emit('ColorAddMap', data);
+        console.log('Send ColorAddMap');
     });
 
     socket.on('ShowUserRoomList', function (data) {
