@@ -111,7 +111,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('EnemyConnect', function (data) {
-
         socket.broadcast.to(RoomID).emit('EnemyConnect', data);
         console.log('EnemyConnect :' + data.ID);
     });
